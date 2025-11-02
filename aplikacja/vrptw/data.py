@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd 
-from .model import Instance
+from vrptw.model import Instance
 
 def load_instance(csv_path: str, Q: int | None = None) -> Instance:
  
@@ -12,7 +12,7 @@ def load_instance(csv_path: str, Q: int | None = None) -> Instance:
             depot_row = df[df['id'] == 0].iloc[0]
             Q = int(depot_row['vehicle_capacity'])
         else: 
-            raise ValueError("Brak ładowności pojazdu - Q")
+            return ValueError("Brak ładowności pojazdu - Q")
         
     # -- Macierz euklidesowa -- #
     cords = df[['x','y']].to_numpy()
