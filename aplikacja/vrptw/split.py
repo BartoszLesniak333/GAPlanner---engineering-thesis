@@ -1,8 +1,13 @@
 import numpy as np
 
-def split_routes(permutation, inst, alpha=1000.0, beta=100.0):
-    
-    n = len(permutation) # pi = permutation , n to ilosc klientów w permutacji 
+def split_routes(pi, inst, alpha=1000.0, beta=100.0):
+    """
+    Dekoder SPLIT – przekształca giant tour (permutację klientów) na zestaw tras VRPTW.
+    Bazuje na klasycznym podejściu 'route-first, cluster-second' (Beasley 1983, Toth & Vigo 2014),
+    powszechnie stosowanym w algorytmach genetycznych do VRPTW (Potvin 1996, Berger et al. 2003).
+    """
+
+    n = len(pi)
     INF = 10**18
 
     # dp[j] = minimalny koszt obsłużenia pierwszych j klientów
@@ -28,7 +33,7 @@ def split_routes(permutation, inst, alpha=1000.0, beta=100.0):
 
         # iteracja po klientach z zakresu i+1 .. j (czyli pi[i+1..j])
         for k in range(i+1, j+1):
-            nid = int(permutation[k-1])  # id klienta (zgodne z indeksem w df)
+            nid = int(pi[k-1])  # id klienta (zgodne z indeksem w df)
             demand = df.demand.iloc[nid]
             ready = df.ready.iloc[nid]
             due = df.due.iloc[nid]
@@ -79,7 +84,7 @@ def split_routes(permutation, inst, alpha=1000.0, beta=100.0):
     j = n
     while j > 0:
         i = prv[j]
-        routes.append(list(permutation[i:j]))
+        routes.append(list(pi[i:j]))
         j = i
     routes.reverse()
 
