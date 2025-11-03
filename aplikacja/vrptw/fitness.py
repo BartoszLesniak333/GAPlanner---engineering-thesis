@@ -1,57 +1,94 @@
-# fitness_penalty_exact.py
+# vrptw/fitness.py
+
+from __future__ import annotations
+from typing import Iterable
 import numpy as np
+from vrptw.model import Instance
 
-def fitness_penalty_from_routes(routes, inst, alpha=1000.0, beta=100.0):
+def fitness_penalty_from_routes(
+    routes: Iterable[Iterable[int]],
+    inst: Instance,
+    alpha: float = 1000.0,
+    beta: float = 100.0,
+) -> tuple[float, float, float, float]:
     """
-    Zwraca wartość: c~(s) = c(s) + α q(s) + β ω(s)
-    - c(s): łączny dystans
-    - q(s): suma nadmiaru ładunku ponad Q na trasach (soft capacity)
-    - ω(s): suma spóźnień względem due (soft time windows; waiting bez kary)
+    Zaimplementowana funkcja z karami:
+        c̃(s) = c(s) + α q(s) + β ω(s)
+
+    gdzie:
+    - c(s)      – zwykły koszt (dystans) wszystkich tras
+    - q(s)      – łączne naruszenie pojemności (ile łącznie "przeładowaliśmy")
+    - ω(s)      – łączne spóźnienie względem okien czasowych
+    - α, β      – wagi kar
+
+    Zwraca krotkę:
+        (fitness, total_distance, total_cap_violation, total_time_violation)
+    żebyś mógł sobie to też podejrzeć w run_cli.py.
     """
-    df, dist, Q = inst.data, inst.distance, inst.Q
+    df = inst.data
+    dist = inst.distance
+    Q = inst.Q
 
-    total_dist = 0.0
-    total_overload = 0.0  # q(s)
-    total_lateness = 0.0  # ω(s)
+    total_distance = 0.0      # c(s)
+    total_cap_violation = 0.0 # q(s)
+    total_time_violation = 0.0 # ω(s)
 
-    for r in routes:
-        last = 0  # depot (index 0)
-        load = 0
+    for route in routes:
+        load = 0.0
         t = 0.0
+        last = 0  # start w depocie (id=0)
 
-        # pętla po klientach w trasie
-        for nid in r:
-            demand = df.demand.iloc[nid]
-            ready  = df.ready.iloc[nid]
-            due    = df.due.iloc[nid]
-            serv   = df.service.iloc[nid]
+        for nid in route:
+            nid = int(nid)
 
-            # dystans i czas jazdy
-            total_dist += dist[last, nid]
-            t += dist[last, nid]
+            demand = float(df.demand.iloc[nid])
+            ready = float(df.ready.iloc[nid])
+            due = float(df.due.iloc[nid])
+            service = float(df.service.iloc[nid])
 
-            # waiting bez kary; spóźnienie karzemy
+            # przejazd depot/klient -> klient
+            travel = dist[last, nid]
+            total_distance += travel
+            t += travel
+
+            # okno czasowe: jak przyjedziemy za wcześnie to czekamy (bez kary)
             if t < ready:
                 t = ready
-            if t > due:
-                total_lateness += (t - due)
 
-            # serwis i aktualizacja stanu
-            t += serv
+            # spóźnienie: to jest właśnie ω(s) (sumujemy opóźnienie)
+            if t > due:
+                total_time_violation += (t - due)
+
+            # obsługa
+            t += service
+
+            # pojemność: jeśli przekroczymy Q to dodajemy nadwyżkę do q(s)
             load += demand
+            if load > Q:
+                total_cap_violation += (load - Q)
+
             last = nid
 
         # powrót do depotu
-        total_dist += dist[last, 0]
+        total_distance += dist[last, 0]
 
-        # nadmiar ładunku na trasie (soft capacity)
-        total_overload += max(0, load - Q)
+    # penalizowana jakość rozwiązania
+    fitness = (
+        total_distance
+        + alpha * total_cap_violation
+        + beta * total_time_violation
+    )
+    return fitness, total_distance, total_cap_violation, total_time_violation
 
-    fitness = total_dist + alpha * total_overload + beta * total_lateness
-    return {
-        "fitness": fitness,
-        "distance": total_dist,
-        "q_overload": total_overload,
-        "omega_lateness": total_lateness,
-        "alpha": alpha, "beta": beta
-    }
+
+# def fitness_from_permutation(pi: np.ndarray, inst: Instance,
+#                              alpha: float = 1000.0, beta: float = 100.0):
+#     """
+#     Wersja pomocnicza: jeśli masz tylko permutację (giant tour),
+#     możesz najpierw użyć splitowania, a potem tej samej funkcji fitness.
+#     Zostawiłem to tutaj na przyszłość – teraz w run_cli robisz split osobno.
+#     """
+#     from vrptw.split import split_routes
+
+#     routes, _, _ = split_routes(pi, inst, alpha=0.0, beta=0.0)
+#     return fitness_penalty_from_routes(routes, inst, alpha, beta)
