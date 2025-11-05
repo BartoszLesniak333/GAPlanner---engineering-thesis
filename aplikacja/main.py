@@ -8,17 +8,27 @@ from vrptw.split import split_routes
 from vrptw.fitness import fitness_penalty_from_routes
 from vrptw.ga import run_ga
 
+import argparse
+
 def parse_args():
-    p = argparse.ArgumentParser(description="GA dla VRPTW (prosta wersja)")
-    p.add_argument("--instance", default="data/data2.csv")
-    p.add_argument("--pop", type=int, default=50)
-    p.add_argument("--gens", type=int, default=200)
-    p.add_argument("--pc", type=float, default=0.9)
-    p.add_argument("--pm", type=float, default=0.2)
-    p.add_argument("--alpha", type=float, default=1000.0)
-    p.add_argument("--beta", type=float, default=100.0)
-    p.add_argument("--outdir", default="out")
-    return p.parse_args()
+    parser = argparse.ArgumentParser()
+    
+    # Wczytanie danych
+    parser.add_argument("--instance", type=str, default="data/data4.csv", help="Ścieżka do pliku CSV z instancją VRPTW")
+
+    # Parametry algorytmu genetycznego
+    parser.add_argument("--pop", type=int, default=50, help="Liczba osobników w populacji")
+    parser.add_argument("--gens", type=int, default=200, help="Liczba pokoleń")
+    parser.add_argument("--pc", type=float, default=0.9, help="Prawdopodobieństwo krzyżowania")
+    parser.add_argument("--pm", type=float, default=0.2, help="Prawdopodobieństwo mutacji")
+    parser.add_argument("--alpha", type=float, default=1000.0, help="Waga kary za spóźnienie")
+    parser.add_argument("--beta", type=float, default=100.0, help="Waga za każde naruszenie ograniczenia")
+    
+    # Katalog wyjściowy
+    parser.add_argument("--outdir", type=str, default="out", help="Folder do zapisu wyników")
+    
+    return parser.parse_args()
+
 
 def save_history_plot(history, out_path):
     plt.plot(range(1, len(history)+1), history)
@@ -60,7 +70,7 @@ def main():
     best_perm, stats, history = run_ga(
         df, D, Q,
         pop_size=20,
-        gens=30,
+        gens=80,
         pc=args.pc,
         pm=args.pm,
         alpha=args.alpha
