@@ -2,7 +2,7 @@ import numpy as np
 from vrptw.fitness import fitness_penalty_from_routes
 from vrptw.split import split_routes
 
-def run_ga(df, D, Q, pop_size, gens, pc, pm, alpha):  
+def run_ga(df, D, Q, pop_size, gens, pc, pm, alpha, beta):  
     
     # 'pop size' to liczba osobników tak dla przypomnienia
     # 'pc' to prawd. krzyżowania a 'pm' to prawd. mutacji
@@ -52,8 +52,8 @@ def run_ga(df, D, Q, pop_size, gens, pc, pm, alpha):
     extra = [None] * pop_size              # Wartosc startowa
 
     for i in range(pop_size):
-        routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=100)     # wywołanie splitu
-        f, d, q, t = fitness_penalty_from_routes(routes, df, D, Q, alpha, 100)   # wywyołanie fitnessu
+        routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta)     # wywołanie splitu
+        f, d, q, t = fitness_penalty_from_routes(routes, df, D, Q, alpha, beta)   # wywyołanie fitnessu
         fits[i] = f    # przypisanie fitnesu
         extra[i] = (d, q, t)   # kontener metryk pomocnicztch, czyli dystans, przeciazenie, spoznienie
 
@@ -80,8 +80,8 @@ def run_ga(df, D, Q, pop_size, gens, pc, pm, alpha):
         pop = np.vstack(new_pop)      # przypisanie nowej populacji
 
         for i in range(pop_size):
-            routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=100)   # ocena split
-            f, d, q, t = fitness_penalty_from_routes(routes, df, D, Q, alpha, 100)  # ocena fitness
+            routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta)   # ocena split
+            f, d, q, t = fitness_penalty_from_routes(routes, df, D, Q, alpha, beta)  # ocena fitness
             fits[i] = f
             extra[i] = (d, q, t)
 

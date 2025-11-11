@@ -1,10 +1,7 @@
 import numpy as np
 
 def split_routes(pi, df, D, Q, alpha=1000.0, beta=100.0):
-    """
-    Prosty dekoder split: dzieli permutację klientów na trasy zgodne z VRPTW.
-    Uwzględnia ograniczenie pojemności i karę za spóźnienia.
-    """
+ 
     n = len(pi)                #liczba klientów w permutacji
     INF = float('inf')
 

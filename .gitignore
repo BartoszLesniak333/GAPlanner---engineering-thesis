@@ -1,0 +1,5 @@
+.venv/
+venv/
+aplikacja/.venv/
+__pycache__/
+*.pyc

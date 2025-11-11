@@ -1,12 +1,7 @@
 import numpy as np
 
 def fitness_penalty_from_routes(routes, df, D, Q, alpha=1000.0, beta=100.0):
-    """
-    Oblicza karaną jakość rozwiązania VRPTW:
-    - dystans tras
-    - przekroczenia pojemności
-    - opóźnienia względem okien czasowych
-    """
+
     total_distance = 0.0          # całkowity dsytans
     cap_violation = 0.0           # suma przekroczeń ładunku
     time_violation = 0.0          # suma spóźnien 
