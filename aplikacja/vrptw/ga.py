@@ -2,114 +2,149 @@ import numpy as np
 from vrptw.fitness import fitness_penalty_from_routes
 from vrptw.split import split_routes
 
-def run_ga(df, D, Q, pop_size, gens, pc, pm, alpha, beta):  
-    
-    # 'pop size' to liczba osobników tak dla przypomnienia
-    # 'pc' to prawd. krzyżowania a 'pm' to prawd. mutacji
-    
-    n = len(df) - 1  # pomijamy depot (id=0) poniewaz permutacje od 1 do n 
 
-    # inicjalizacja populacji -> losuje k indeksów, wybieram najlepszy (najm. fitness) i zwracam kopie
-    def init_population(size, n):
-        base = np.arange(1, n + 1)
+def run_ga(
+    df,
+    D,
+    Q,
+    pop_size: int,
+    gens: int,
+    pc: float,
+    pm: float,
+    alpha: float,
+    beta: float,
+    max_vehicles: int | None = None,
+):
+    """
+    Prosty algorytm genetyczny dla VRPTW:
+    - reprezentacja: permutacja klientów (1..n), giant-tour + split,
+    - elityzm: 1 najlepszy osobnik,
+    - selekcja: turniejowa,
+    - krzyżowanie: OX,
+    - mutacja: swap.
+    """
+
+    n = len(df) - 1  # pomijamy depot (id=0)
+
+    # --- Inicjalizacja populacji -------------------------------------------------
+
+    def init_population(size: int, n_nodes: int) -> np.ndarray:
+        base = np.arange(1, n_nodes + 1)
         return np.array([np.random.permutation(base) for _ in range(size)])
 
-    #selekcja turniejowa
-    def tournament_selection(pop, fits, k=3):
-        idx = np.random.choice(len(pop), size=k, replace=False)
-        best = min(idx, key=lambda i: fits[i])
-        return pop[best].copy()
+    # --- Operatory GA ------------------------------------------------------------
 
-    # krzyżowanie OX
+    def tournament_selection(pop: np.ndarray, fits: np.ndarray, k: int = 3) -> np.ndarray:
+        idxs = np.random.choice(len(pop), size=k, replace=False)
+        best_idx = idxs[np.argmin(fits[idxs])]
+        return pop[best_idx]
 
-    """
-    Tutaj sobie opisze bo to ważne. 
-    1, wytnij losowy fragmment z p1 i wstaw di dziecka
-    2. reszte pozycji uzupełnij z p2 pomijajc powtórki
-    Efektem jest dziecko zachowujace fragmenty obyu rodziców i jest poprawna permutacja
-    """
-
-    def ox_crossover(p1, p2):
+    def ox_crossover(p1: np.ndarray, p2: np.ndarray) -> np.ndarray:
+        """Order crossover (OX) dla permutacji."""
         n = len(p1)
-        c = np.full(n, -1)         # dziecko
-        a, b = sorted(np.random.choice(n, 2, replace=False))
-        c[a:b+1] = p1[a:b+1]      #wstawienie do dziecka
-        pos = (b + 1) % n
-        for gene in p2:           # uzupełnienie reszty genami
-            if gene not in c:
-                c[pos] = gene
-                pos = (pos + 1) % n
-        return c
+        c1, c2 = sorted(np.random.choice(n, size=2, replace=False))
+        child = -np.ones(n, dtype=int)
 
-    # mutacja -> zamien 2 geny ze sobą
-    def swap_mutation(child):
-        i, j = np.random.choice(len(child), 2, replace=False)
-        child[i], child[j] = child[j], child[i]
+        # środek z p1
+        child[c1:c2 + 1] = p1[c1:c2 + 1]
 
-    # Inicjalizacja
-    pop = init_population(pop_size, n)     # inicjalizacja populacji
-    fits = np.empty(pop_size)              # Wartosc startowa
-    extra = [None] * pop_size              # Wartosc startowa
+        # pozostałe pozycje w kolejności z p2
+        pos = (np.arange(n) + c2 + 1) % n
+        p2_list = list(p2)
+        idx_p2 = 0
+        for p in pos:
+            if child[p] != -1:
+                continue
+            # szukamy pierwszego genu z p2, który nie jest jeszcze w dziecku
+            while p2_list[idx_p2] in child:
+                idx_p2 += 1
+            child[p] = p2_list[idx_p2]
+            idx_p2 += 1
+            if idx_p2 >= n:
+                break
+        return child
 
+    def swap_mutation(ind: np.ndarray) -> None:
+        i, j = np.random.choice(len(ind), size=2, replace=False)
+        ind[i], ind[j] = ind[j], ind[i]
+
+    # --- Start GA ----------------------------------------------------------------
+
+    pop = init_population(pop_size, n)
+    fits = np.empty(pop_size)
+    extra = [None] * pop_size  # (distance, overload, lateness)
+
+    # ocena początkowej populacji
     for i in range(pop_size):
-        routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta)     # wywołanie splitu
-        f, d, q, t = fitness_penalty_from_routes(routes, df, D, Q, alpha, beta)   # wywyołanie fitnessu
-        fits[i] = f    # przypisanie fitnesu
-        extra[i] = (d, q, t)   # kontener metryk pomocnicztch, czyli dystans, przeciazenie, spoznienie
+        routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta)
+        f, d, q, t = fitness_penalty_from_routes(
+            routes,
+            df,
+            D,
+            Q,
+            alpha=alpha,
+            beta=beta,
+            max_vehicles=max_vehicles,
+        )
+        fits[i] = f
+        extra[i] = (d, q, t)
 
-    best_idx = np.argmin(fits)
+    best_idx = int(np.argmin(fits))
     best = pop[best_idx].copy()
-    best_fit = fits[best_idx]
-    best_extra = extra[best_idx]
+    best_stats = extra[best_idx]
+    best_fit = float(fits[best_idx])
     history = [best_fit]
 
-    # Ewolucja
+    # --- Główna pętla GA ---------------------------------------------------------
+
     for _ in range(gens):
-        new_pop = [best.copy()]         # tu zachodzi Elityzm czyli przechodzi bez zmian
+        new_pop = [best.copy()]  # elityzm
+
         while len(new_pop) < pop_size:
-            p1 = tournament_selection(pop, fits) # selekcja
+            p1 = tournament_selection(pop, fits)
             p2 = tournament_selection(pop, fits)
-            if np.random.rand() < pc:   # prawd. krzyzowania 
+
+            # krzyżowanie
+            if np.random.rand() < pc:
                 child = ox_crossover(p1, p2)
             else:
                 child = p1.copy()
-            if np.random.rand() < pm:   # prawd. mutacji 
+
+            # mutacja
+            if np.random.rand() < pm:
                 swap_mutation(child)
+
             new_pop.append(child)
 
-        pop = np.vstack(new_pop)      # przypisanie nowej populacji
+        pop = np.array(new_pop, dtype=int)
 
+        # ocena nowej populacji
         for i in range(pop_size):
-            routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta)   # ocena split
-            f, d, q, t = fitness_penalty_from_routes(routes, df, D, Q, alpha, beta)  # ocena fitness
+            routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta)
+            f, d, q, t = fitness_penalty_from_routes(
+                routes,
+                df,
+                D,
+                Q,
+                alpha=alpha,
+                beta=beta,
+                max_vehicles=max_vehicles,
+            )
             fits[i] = f
             extra[i] = (d, q, t)
 
-        # porównanie najleszego w tej generacji i aktualizacja globalnie najlepszego oraz zapis wynik do history
-        gen_best_idx = np.argmin(fits)
-        if fits[gen_best_idx] < best_fit:
-            best_fit = fits[gen_best_idx]
-            best = pop[gen_best_idx].copy()
-            best_extra = extra[gen_best_idx]
+        best_idx = int(np.argmin(fits))
+        if fits[best_idx] < best_fit:
+            best_fit = float(fits[best_idx])
+            best = pop[best_idx].copy()
+            best_stats = extra[best_idx]
 
         history.append(best_fit)
-    # metryki najnlepszego rozwiazania
+
     stats = {
         "fitness": best_fit,
-        "distance": best_extra[0],
-        "overload": best_extra[1],
-        "lateness": best_extra[2],
+        "distance": best_stats[0],
+        "overload": best_stats[1],
+        "lateness": best_stats[2],
     }
     return best, stats, history
-
-#  NOTATKI
-# czy musze wprawdzic zmienna oznaczjaca liczbe pojzdów do split? wtedy algorytm bedzie preferował mnijesza liczbe tras
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
