@@ -73,6 +73,8 @@ class GAWorker(QThread):
                 alpha=self.params.alpha,
                 beta=self.params.beta,
                 max_vehicles=self.params.max_vehicles,
+                time_limit_sec=60 * 60, #30 minut
+                gamma_vehicles=1000.0
             )
 
             # Uruchomienie splitu dla najlepszego osobnika
@@ -80,18 +82,14 @@ class GAWorker(QThread):
                 best_perm, df, D, Q,
                 self.params.alpha,
                 self.params.beta,
+                gamma=1000.0
             )
 
-            # twarde sprawdzenie limitu liczby pojazdów
-            if self.params.max_vehicles is not None and NV > self.params.max_vehicles:
-                self.finished.emit({
-                    "ok": False,
-                    "error": (
-                        f"Znalezione rozwiązanie używa {NV} pojazdów, "
-                        f"a dostępne jest tylko {self.params.max_vehicles}."
-                    ),
-                })
-                return
+            # miękkie sprawdzenie limitu liczby pojazdów – tylko informacja
+            vehicle_overflow = (
+                self.params.max_vehicles is not None
+                and NV > self.params.max_vehicles
+            )
 
             # zapis wyników
             os.makedirs(self.params.outdir, exist_ok=True)
@@ -110,6 +108,7 @@ class GAWorker(QThread):
                 "NV": NV,
                 "stats": stats,
                 "history": history,
+                "vehicle_overflow": vehicle_overflow,
             })
 
         except Exception:
@@ -324,6 +323,7 @@ class MainWindow(QMainWindow):
         NV = res["NV"]
         self.stats = res["stats"]
         self.history = res["history"]
+        overflow = res.get("vehicle_overflow", False)
 
         self.lbl_status.setText("Zakończono.")
         self.log.append("Zakończono.")
@@ -338,14 +338,28 @@ class MainWindow(QMainWindow):
             f"Fitness: {st.get('fitness'):.2f}"
         )
 
+        # wypisanie tras odwiedzin
+        if self.routes:
+            self.log.append("\n=== TRASY ODWIEDZIN ===")
+            for idx, r in enumerate(self.routes, start=1):
+                seq = " -> ".join(str(nid) for nid in r)
+                self.log.append(f"Trasa {idx}: {seq}")
+
+        # informacja o przekroczeniu liczby pojazdów (miękkie ograniczenie)
+        if overflow:
+            self.log.append(
+                f"\nUWAGA: użyto {NV} pojazdów, "
+                f"więcej niż zadana flota {self.sb_vehicles.value()}."
+            )
+
         # historia fitnessu
         ax = self.canvas_conv.ax
         ax.clear()
         ax.plot(range(1, len(self.history) + 1), self.history)
         ax.set_xlabel("Generacja")
         ax.set_ylabel("Najlepszy fitness")
-        ax.setTitle = "Historia GA"
-        ax.grid(True, alpha=0.3)
+        ax.set_title("Historia GA")
+        ax.grid(True)
         self.canvas_conv.draw_idle()
 
         # trasy

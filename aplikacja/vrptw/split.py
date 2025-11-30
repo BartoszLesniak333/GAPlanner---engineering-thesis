@@ -1,6 +1,6 @@
 import numpy as np
 
-def split_routes(pi, df, D, Q, alpha=1000.0, beta=100.0):
+def split_routes(pi, df, D, Q, alpha=1000.0, beta=100.0, gamma=0.0):
  
     n = len(pi)                #liczba klientów w permutacji
     INF = float('inf')
@@ -50,7 +50,7 @@ def split_routes(pi, df, D, Q, alpha=1000.0, beta=100.0):
             last = nid             # aktualizacja ostatnio owiedzonego klienta
 
         cost += D[last, 0]  # powrót do depotu
-        total = cost + alpha * late + beta * viol 
+        total = cost + alpha * late + beta * viol + gamma
         return total
 
     #programowanie dynamiczne

@@ -1,3 +1,4 @@
+import time
 import numpy as np
 from vrptw.fitness import fitness_penalty_from_routes
 from vrptw.split import split_routes
@@ -14,6 +15,8 @@ def run_ga(
     alpha: float,
     beta: float,
     max_vehicles: int | None = None,
+    time_limit_sec: float | None = None,
+    gamma_vehicles: float = 0.0
 ):
     """
     Prosty algorytm genetyczny dla VRPTW:
@@ -40,7 +43,6 @@ def run_ga(
         return pop[best_idx]
 
     def ox_crossover(p1: np.ndarray, p2: np.ndarray) -> np.ndarray:
-        """Order crossover (OX) dla permutacji."""
         n = len(p1)
         c1, c2 = sorted(np.random.choice(n, size=2, replace=False))
         child = -np.ones(n, dtype=int)
@@ -76,7 +78,7 @@ def run_ga(
 
     # ocena początkowej populacji
     for i in range(pop_size):
-        routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta)
+        routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta,gamma=gamma_vehicles)
         f, d, q, t = fitness_penalty_from_routes(
             routes,
             df,
@@ -85,6 +87,7 @@ def run_ga(
             alpha=alpha,
             beta=beta,
             max_vehicles=max_vehicles,
+            gamma_vehicles=gamma_vehicles
         )
         fits[i] = f
         extra[i] = (d, q, t)
@@ -97,7 +100,13 @@ def run_ga(
 
     # --- Główna pętla GA ---------------------------------------------------------
 
+    start_time = time.time()
+
     for _ in range(gens):
+        # LIMIT CZASU – przerywamy jeśli przekroczony
+        if time_limit_sec is not None and (time.time() - start_time) >= time_limit_sec:
+            break
+    
         new_pop = [best.copy()]  # elityzm
 
         while len(new_pop) < pop_size:
@@ -120,7 +129,7 @@ def run_ga(
 
         # ocena nowej populacji
         for i in range(pop_size):
-            routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta)
+            routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta,gamma=gamma_vehicles)
             f, d, q, t = fitness_penalty_from_routes(
                 routes,
                 df,
@@ -129,6 +138,7 @@ def run_ga(
                 alpha=alpha,
                 beta=beta,
                 max_vehicles=max_vehicles,
+                gamma_vehicles=gamma_vehicles
             )
             fits[i] = f
             extra[i] = (d, q, t)

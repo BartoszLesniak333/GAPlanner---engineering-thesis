@@ -8,6 +8,7 @@ def fitness_penalty_from_routes(
     alpha: float = 1000.0,
     beta: float = 100.0,
     max_vehicles: int | None = None,
+    gamma_vehicles: float = 0.0,
 ):
     """
     Funkcja dopasowania dla VRPTW:
@@ -54,10 +55,19 @@ def fitness_penalty_from_routes(
         # powrót do depot
         total_distance += D[last, 0]
 
-    # twardy limit liczby pojazdów (tras)
-    if max_vehicles is not None and len(routes) > max_vehicles:
-        fitness = np.inf
-    else:
-        fitness = total_distance + alpha * cap_violation + beta * time_violation
+    num_vehicles = len(routes)
 
+    base = (
+        total_distance
+        + alpha * cap_violation
+        + beta * time_violation
+        + gamma_vehicles * num_vehicles   # kara za liczbę tras
+    )
+
+    # twardy / pół-twardy limit
+    if max_vehicles is not None and num_vehicles > max_vehicles:
+        # silna kara za przekroczenie limitu zamiast inf
+        fitness = base + 1e6 * (num_vehicles - max_vehicles)
+    else:
+        fitness = base
     return fitness, total_distance, cap_violation, time_violation
