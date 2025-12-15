@@ -1,4 +1,4 @@
-# GAPlanner---engineering thesis
+# GAPlanner - engineering thesis
 
 Aplikacja desktopowa do rozwiązywania problemu **VRPTW (Vehicle Routing Problem with Time Windows)** z użyciem **algorytmu genetycznego (GA)**.
 
