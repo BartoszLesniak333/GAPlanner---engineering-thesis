@@ -1,42 +1,25 @@
-[1] J. Ochelska-Mierzejewska, A. Poniszewska-Marańda, W. Marańda , „Selected Genetic Algorithms for Vehicle Routing Problem Solving” , rok publikacji: 17.12.2021,  https://www.mdpi.com/2079-9292/10/24/3147 , dostęp 26.10.2025r. 
 
-[2] P. Toth, D. Vigo „Vehicle Routing Problems, Methods, and Applications, Second Edition”,  rok publikacji: 26.02.2015, SIAM
-
-[3] G.B. Dantizg, J.H.Ramser, „The Truck Dispatching Problem”, rok publikacji: 1959, INFORMS
-
-[4] M. Leonard, ,, UPS adds dynamic routing to ORION, saving 2-4 miles per driver”, rok publikacji : 11.06.2021, https://www.supplychaindive.com/news/ups-orion-route-planning-analytics-data-logistics/601673 , dostęp 26.10.2021
-
-[5] K. C. Tan, YH. Chew, L.H. Lee  ,,A Hybrid Multiobjective Evolutionary Algorithm for Solving Vehicle Routing Problem with Time Windows”, rok publikacji: 18.10.2005,  https://www.researchgate.net/publication/226813072_A_Hybrid_Multiobjective_Evolutionary_Algorithm_for_Solving_Vehicle_Routing_Problem_with_Time_Windows, dostęp 26.10.2025
-
-[6] O. Bräysy, M.Gendreau, ,, Vehicle Routing Problem with Time Windows Part I: Route Construction and Local Search Algorithms”, rok publikacji: 02.2005, https://www.researchgate.net/publication/220413310_Vehicle_Routing_Problem_with_Time_Windows_Part_I_Route_Construction_and_Local_Search_Algorithms, dostęp 27.10.2025
-
-[7] R. Jadczak ,,Heurystyki i Metaheurystyki w problemach VRP” , rok publikacji: 2010, https://www.dbc.wroc.pl/dlibra/publication/160017/edition/121721, dostęp 27.10.2025
-
-[8] B.Golden, S.Raghaven, E.Wasil, ,,The Vehicle Routing Problem: Latest Advances and New Chellenges”, rok publikacji: 2008 , https://link.springer.com/book/10.1007/978-0-387-77778-8, dostęp 27.10.2025
-
-[9] D.Whitley, ,,A Genetic Algorithm Tutorial”, rok publikacji: 1998, https://www.researchgate.net/publication/2425017_A_Genetic_Algorithm_Tutorial, dostęp 27.10.2025
-
-[10] M.Mitchell, ,,An Introduction to Genetic Algorithms”, rok publikacji 1996, MIT Press 
-
-[11] C.R. Reeves, J.E. Rowe, “Genetic Algorithms - Principles and Perspectives”, rok publikacji: 2002, https://link.springer.com/book/10.1007/b101880, dostęp 27.10.2025
-
-[12] A.E. Eiben, J.E Smith ,,Introduction to Evolutionary Computing”, rok publikacji 2008, Springer
-
-[13] J.Y. Potvin, S. Bengio, ,,The vehicle Routing Problem with Time Windows – Part II”, rok publikacji: 1996, https://www.semanticscholar.org/paper/The-Vehicle-Routing-Problem-with-Time-Windows-Part-Potvin-Bengio/13d9b6e085cde2d1b38ccf400044f68bd61b107b, dostęp 27.10.2025 
-
-[14] C. Prins, ,, A Simple and Effective Evolutionary Algorithm for the Vehicle Routing Problem” rok publikacji: 2001, https://static.aminer.org/pdf/PDF/000/813/858/a_simple_and_effective_evolutionary_algorithm_for_the_vehicle_routing.pdf, dostęp 28.10.2025 
-
-[15] A. Konak, D.W. Coit, A. E. Smith, ,,Multi objective optimization using genetic algorithms: A tutorial” , rok publikacji: 9.01.2006,  https://www.sciencedirect.com/science/article/pii/S0951832005002012, dostęp 29.10.2026
-
-[16] J.H. Holland, ,,Adaptation in natural and artificial systems”, rok publikacji: 1975 https://books.google.pl/books?id=5EgGaBkwvWcC&printsec=frontcover&hl=pl&source=gbs_ViewAPI&redir_esc=y#v=onepage&q&f=false, dostęp 29.10.2025
-
-[17] Z.Michalewicz ,,Genetic Algorithms + Data Structures = Evolution Programs” rok publikacji: 1996, Springer 
-
-[18] O.Bräysy, M.Gendreau, ,,Vehicle Routing Problem with Time Windows, Part II: Metaheuristics”, rok publikacji: 02.2005, https://www.researchgate.net/publication/220413132_Vehicle_Routing_Problem_With_Time_Windows_Part_II_Metaheuristics
-
-[19] M.Ghannam, A.Gleixner ,,Adapting Hybrid Genetic Search for Dynamic Vehicle Routing”, rok publikacji 07.2023, https://www.researchgate.net/publication/372584054_Adapting_Hybrid_Genetic_Search_for_Dynamic_Vehicle_Routing, dostęp 29.10.2025
-
-[20] J.D. Berger, M.Barkaoui, O. Bräysy, ,,A Rout-Directed Hybrid Genetic Approach for the Vehicle Routing Problem with Time Windows“, rok publikacji:01.2008,  www.researchgate.net/publication/221704660_A_Route-Directed_Hybrid_Genetic_Approach_for_the_Vehicle_Routing_Problem_with_Time_Windows?enrichId=rgreq-5477cc52b633733c37d98267be219106-XXX&enrichSource=Y292ZXJQYWdlOzIyMTcwNDY2MDtBUzo5NzE2MTA2NDc0NzAwOEAxNDAwMTc2NDExMDQ0&el=1_x_3&_esc=publicationCoverPdf, dostęp 29.10.2025
-
-[21] G. Chen, J. Gao, D. Chen,, A Hybrid Multiobjective Evolutionary Algorithm for Solving Vehicle Routing Problem with Time Windows”, rok publikacji: 7.02.2025, https://www.mdpi.com/2079-9292/14/4/647, dostęp 29.10.2025
-
+1.	Ochelska-Mierzejewska J., Poniszewska-Marańda A., Marańda W., "Selected Genetic Algorithms for Vehicle Routing Problem Solving", https://www.mdpi.com/2079-9292/10/24/3147 (dostęp 15.11.2025), rok publikacji: 2021
+2.	Jadczak R. "Heurystyki i Metaheurystyki w problemach VRP", https://www.dbc.wroc.pl/dlibra/publication/160017/edition/121721 (dostęp 15.11.2025), rok publikacji: 2010.
+3.	Dantizg G.B, Ramser J.H.,  "The Truck Dispatching Problem", INFORMS, rok publikacji: 1959.
+4.	Toth P., Vigo D., „Vehicle Routing Problems, Methods, and Applications, Second Edition”, SIAM, rok publikacji: 2015.
+5.	Leonard M., "UPS adds dynamic routing to ORION, saving 2-4 miles per driver", https://www.supplychaindive.com/news/ups-orion-route-planning-analytics-data-logistics/601673 (dostęp 15.11.2025), rok publikacji : 2021.
+6.	Tan S.Y., Yeh W.C., "The Vehicle Routing Problem: State-of-the-Art Classification and Review", https://www.mdpi.com/2076-3417/11/21/10295 (dostęp 15.11.2025), rok publikacji: 2021.
+7.	Solomon M., "Algorithms for the Vehicle Routing and Scheduling Problems with Time Window Constraints", INFORMS, rok publikacji: 1987.
+8.	Bräysy O, Gendreau M., "Vehicle Routing Problem with Time Windows Part I: Route Construction and Local Search Algorithms", https://www.researchgate.net/publication/220413310_Vehicle_Routing_Problem_with_Time_Windows_Part_I_Route_Construction_and_Local_Search_Algorithms (Dostęp 16.11.2025), rok publikacji: 2005.
+9.	Tan K.C., Chew Y., Lee L.H., "A Hybrid Multiobjective Evolutionary Algorithm for Solving Vehicle Routing Problem with Time Windows", https://www.researchgate.net/publication/226813072_A_Hybrid_Multiobjective_Evolutionary_Algorithm_for_Solving_Vehicle_Routing_Problem_with_Time_Windows (Dostęp 16.11.2025), rok publikacji: 2005.
+10.	Golden B. , Raghaven S., Wasil E., "The Vehicle Routing Problem: Latest Advances and New Chellenges", https://link.springer.com/book/10.1007/978-0-387-77778-8, dostęp 27.10.2025 (dostęp 17.11.2025), rok publikacji: 2008.
+11.	Bräysy O., Gendreau M., "Vehicle Routing Problem with Time Windows, Part II: Metaheuristics". https://www.researchgate.net/publication/220413132_Vehicle_Routing_Problem_With_Time_Windows_Part_II_Metaheuristics (dostęp 16.11.2025), rok publikacji: 2005.
+12.	Eiben A.E., Smith J.E., "Introduction to Evolutionary Computing", Springer, rok publikacji: 2008.
+13.	Mitchell M., "An Introduction to Genetic Algorithms", MIT Press, rok publikacji: 1996.
+14.	Holland J.H., "Adaptation in natural and artificial systems”, https://books.google.pl/books?id=5EgGaBkwvWcC&printsec=frontcover&hl=pl&source=gbs_ViewAPI&redir_esc=y#v=onepage&q&f=false (dostęp 29.10.2025), rok publikacji: 1975.
+15.	Prins C., "A Simple and Effective Evolutionary Algorithm for the Vehicle Routing Problem". https://static.aminer.org/pdf/PDF/000/813/858/a_simple_and_effective_evolutionary_algorithm_for_the_vehicle_routing.pdf (dostęp 28.10.2025), rok publikacji: 2001.
+16.	Michalewicz Z.,"Genetic Algorithms + Data Structures = Evolution Programs". Springer, rok publikacji: 1996.
+17.	Koza J.R., "Genetic Programming as a Means for Programming Computers by Natural Selection",                                                                                                                                                         https://www.genetic-programming.com/jkpdf/scjournallong.pdf (Dostęp 22.11.2025), rok publikacji: 1992.
+18.	Chen G., Gao J., Chen D., "Research on Vehicle Routing Problem with Time Windows Based on Improved Genetic Algorithm and Ant Colony Algorithm", https://www.researchgate.net/publication/388814943_Research_on_Vehicle_Routing_Problem_with_Time_Windows_Based_on_Improved_Genetic_Algorithm_and_Ant_Colony_Algorithm (Dostęp: 22.11.2025), rok publikacji: 20205.
+19.	Whitley D. "A Genetic Algorithm Tutorial", https://www.researchgate.net/publication/2425017_A_Genetic_Algorithm_Tutorial (Dostęp 22.11.2025), rok publikacji: 1998.
+20.	Reeves C.R., Rowe J.E., "Genetic Algorithms - Principles and Perspectives", https://link.springer.com/book/10.1007/b101880 (dostęp 23.11.2025), rok publikacji: 2002.
+21.	Paduch P., "Obliczenia Naturalne - Algorytmy genetyczne", https://achilles.tu.kielce.pl/portal/Members/332bd2d158a24964b2b98a7fc2879842/obliczenia-naturalne/wyklady/wyklad-5/wyklad_05.pdf (dostęp 23.11.2025), rok publikacji: 2014.
+22.	Ghannam M., Gleixner A., "Adapting Hybrid Genetic Search for Dynamic Vehicle Routing", https://www.researchgate.net/publication/372584054_Adapting_Hybrid_Genetic_Search_for_Dynamic_Vehicle_Routing (dostęp 24.11.2025), rok publikacji 2023.
+23.	Berger J.D., Barkaoui M., Bräysy O., "A Rout-Directed Hybrid Genetic Approach for the Vehicle Routing Problem with Time Windows", www.researchgate.net/publication/221704660_A_Route-Directed_Hybrid_Genetic_Approach_for_the_Vehicle_Routing_Problem_with_Time_Windows (dostęp 24.11.2025), rok publikacji: 2008.
+24.	Minocha B., Tripathi S., "Two Phase Algorithm for Solving VRPTW Problem", https://www.cscjournals.org/manuscript/Journals/IJAE/Volume4/Issue1/IJAE-139.pdf (dostęp 7.12.2025), rok publikacji: 2013.

@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
     QFileDialog, QLabel, QProgressBar, QTextEdit, QMessageBox
 )
 
-# widżet matplotlib w QT
+# widżet matplotlib 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -50,7 +50,7 @@ class MplCanvas(FigureCanvas):
         self.draw_idle()
 
 
-# główna funkcja obliczeń, dzięki dziedziczeniu po QThread obliczenia działają w tle
+# główna funkcja obliczeń
 class GAWorker(QThread):
     finished = Signal(dict)  # wysyłanie obliczonego wyniku lub błędu
 
@@ -73,11 +73,11 @@ class GAWorker(QThread):
                 alpha=self.params.alpha,
                 beta=self.params.beta,
                 max_vehicles=self.params.max_vehicles,
-                time_limit_sec=60 * 60, #30 minut
-                gamma_vehicles=1000.0
+                time_limit_sec=60 * 60, #60 minut
+                gamma=1000.0
             )
 
-            # Uruchomienie splitu dla najlepszego osobnika
+            # uruchomienie splitu dla najlepszego osobnika
             routes, NV, _ = split_routes(
                 best_perm, df, D, Q,
                 self.params.alpha,
@@ -119,7 +119,7 @@ class GAWorker(QThread):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("GAPlanner - VRPTW with GA")
+        self.setWindowTitle("GAPlanner - engineering thesis")
         self.resize(1100, 760)
 
         self.worker: Optional[GAWorker] = None
@@ -139,7 +139,7 @@ class MainWindow(QMainWindow):
         # instancja i wybór pliku
         self.le_instance = QLineEdit()
         self.le_instance.setPlaceholderText("")
-        btn_browse = QPushButton("Wybierz plik…")
+        btn_browse = QPushButton("Wybierz plik")
         btn_browse.clicked.connect(self.on_browse)
         row = QHBoxLayout()
         row.addWidget(self.le_instance)
@@ -151,7 +151,7 @@ class MainWindow(QMainWindow):
         # folder wyjściowy
         self.le_outdir = QLineEdit()
         self.le_outdir.setText("out")
-        btn_out = QPushButton("Wybierz folder…")
+        btn_out = QPushButton("Wybierz folder")
         btn_out.clicked.connect(self.on_browse_outdir)
         row2 = QHBoxLayout()
         row2.addWidget(self.le_outdir)
@@ -236,7 +236,7 @@ class MainWindow(QMainWindow):
         root.addLayout(left, 0)
         root.addLayout(right, 1)
 
-    # --- Handlery GUI ------------------------------------------------------------
+    # handlery GUI
 
     @Slot()
     def on_browse(self):

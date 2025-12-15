@@ -8,15 +8,9 @@ def fitness_penalty_from_routes(
     alpha: float = 1000.0,
     beta: float = 100.0,
     max_vehicles: int | None = None,
-    gamma_vehicles: float = 0.0,
+    gamma: float = 0.0,
 ):
-    """
-    Funkcja dopasowania dla VRPTW:
-    - minimalizujemy łączny dystans,
-    - pojemność i okna czasowe karane są współczynnikami alpha i beta,
-    - jeśli liczba tras > max_vehicles → fitness = nieskończoność (rozwiązanie niedozwolone).
-    """
-
+    
     total_distance = 0.0          # całkowity dystans
     cap_violation = 0.0           # suma przekroczeń ładunku
     time_violation = 0.0          # suma spóźnień
@@ -61,7 +55,7 @@ def fitness_penalty_from_routes(
         total_distance
         + alpha * cap_violation
         + beta * time_violation
-        + gamma_vehicles * num_vehicles   # kara za liczbę tras
+        + gamma * num_vehicles   # kara za liczbę tras
     )
 
     # twardy / pół-twardy limit

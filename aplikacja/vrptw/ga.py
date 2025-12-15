@@ -16,27 +16,18 @@ def run_ga(
     beta: float,
     max_vehicles: int | None = None,
     time_limit_sec: float | None = None,
-    gamma_vehicles: float = 0.0
+    gamma: float = 0.0
 ):
-    """
-    Prosty algorytm genetyczny dla VRPTW:
-    - reprezentacja: permutacja klientów (1..n), giant-tour + split,
-    - elityzm: 1 najlepszy osobnik,
-    - selekcja: turniejowa,
-    - krzyżowanie: OX,
-    - mutacja: swap.
-    """
-
+    
     n = len(df) - 1  # pomijamy depot (id=0)
 
-    # --- Inicjalizacja populacji -------------------------------------------------
+    #inicjalizacja populacji
 
     def init_population(size: int, n_nodes: int) -> np.ndarray:
         base = np.arange(1, n_nodes + 1)
         return np.array([np.random.permutation(base) for _ in range(size)])
 
-    # --- Operatory GA ------------------------------------------------------------
-
+    # operatory
     def tournament_selection(pop: np.ndarray, fits: np.ndarray, k: int = 3) -> np.ndarray:
         idxs = np.random.choice(len(pop), size=k, replace=False)
         best_idx = idxs[np.argmin(fits[idxs])]
@@ -70,7 +61,7 @@ def run_ga(
         i, j = np.random.choice(len(ind), size=2, replace=False)
         ind[i], ind[j] = ind[j], ind[i]
 
-    # --- Start GA ----------------------------------------------------------------
+    # start GA
 
     pop = init_population(pop_size, n)
     fits = np.empty(pop_size)
@@ -78,7 +69,7 @@ def run_ga(
 
     # ocena początkowej populacji
     for i in range(pop_size):
-        routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta,gamma=gamma_vehicles)
+        routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta,gamma=gamma)
         f, d, q, t = fitness_penalty_from_routes(
             routes,
             df,
@@ -87,7 +78,7 @@ def run_ga(
             alpha=alpha,
             beta=beta,
             max_vehicles=max_vehicles,
-            gamma_vehicles=gamma_vehicles
+            gamma=gamma
         )
         fits[i] = f
         extra[i] = (d, q, t)
@@ -98,12 +89,11 @@ def run_ga(
     best_fit = float(fits[best_idx])
     history = [best_fit]
 
-    # --- Główna pętla GA ---------------------------------------------------------
-
+    # główna pętla GA
     start_time = time.time()
 
     for _ in range(gens):
-        # LIMIT CZASU – przerywamy jeśli przekroczony
+        # limit czasu - przerywamy jeśli przekroczony
         if time_limit_sec is not None and (time.time() - start_time) >= time_limit_sec:
             break
     
@@ -129,7 +119,7 @@ def run_ga(
 
         # ocena nowej populacji
         for i in range(pop_size):
-            routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta,gamma=gamma_vehicles)
+            routes, _, _ = split_routes(pop[i], df, D, Q, alpha=alpha, beta=beta,gamma=gamma)
             f, d, q, t = fitness_penalty_from_routes(
                 routes,
                 df,
@@ -138,7 +128,7 @@ def run_ga(
                 alpha=alpha,
                 beta=beta,
                 max_vehicles=max_vehicles,
-                gamma_vehicles=gamma_vehicles
+                gamma=gamma
             )
             fits[i] = f
             extra[i] = (d, q, t)
