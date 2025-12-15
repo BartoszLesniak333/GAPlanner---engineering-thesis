@@ -16,14 +16,15 @@ Aplikacja desktopowa do rozwiązywania problemu **VRPTW (Vehicle Routing Problem
   - wykres tras na płaszczyźnie (X, Y)
 - Zapis wyników do folderu wyjściowego
 
-## Jak działa (w skrócie)
+## Jak działa aplikacja ? (w skrócie)
 - GA optymalizuje **permutację klientów**.
-- Następnie permutacja jest zamieniana na zestaw tras metodą `split_routes(...)`.
-- Fitness opiera się o metryki:
-  - dystans (`distance`)
-  - przeładowania (`overload`)
-  - spóźnienia względem okien czasowych (`lateness`)
-  - oraz wynik łączny (`fitness`) z wagami `alpha` i `beta`.
+- Następnie permutacja jest zamieniana na zestaw mnijeszych tras.
+- Wyliczane jest dopasownaie opierające się o metryki:
+  - dystansu 
+  - przeładowania 
+  - spóźnienia względem okien czasowych 
+  - ilości użytych pojazdów
+- Aplikacja wykonuje działanie do momentu przekroczenia ustawionego dopuszczalnego czasu działaniu lub liczby iteracji. 
 
 ## Wymagania
 - Python 3.10+ (zalecane)
